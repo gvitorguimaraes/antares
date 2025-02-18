@@ -27,11 +27,16 @@ public class UserService implements IUserService
     public AuthToken login(LoginDTO login)
     {
         User user = repo.findByEmail(login.username());
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(encoder.matches(login.password(), user.getPassword()))
+
+        if (user != null )
         {
-            return TokenUtil.encode(login);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            if(encoder.matches(login.password(), user.getPassword()))
+            {
+                return TokenUtil.encode(new LoginDTO(login.username(), login.password(), user.getRole().name()));
+            }
         }
+
         return null;
     }
 }

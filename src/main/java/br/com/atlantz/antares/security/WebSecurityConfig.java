@@ -1,5 +1,6 @@
 package br.com.atlantz.antares.security;
 
+import br.com.atlantz.antares.model.enums.UserRoleEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,7 @@ public class WebSecurityConfig
         {
             auth.requestMatchers(new AntPathRequestMatcher("/register", "POST")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/auth", "POST")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/master", "GET")).hasRole(UserRoleEnum.MASTER.name())
                     .anyRequest().authenticated();
         })
         .addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class);

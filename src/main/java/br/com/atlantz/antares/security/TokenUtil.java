@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -28,6 +29,7 @@ public class TokenUtil
             String jwtToken = Jwts.builder()
                                   .subject(login.username())
                                   .issuer(EMITER)
+                                  .claim("ROLE", "ROLE_"+login.role())
                                   .expiration(new Date(System.currentTimeMillis() + EXPIRATION))
                                   .signWith(key)
                                   .compact();
@@ -55,13 +57,14 @@ public class TokenUtil
                 String subject = claims.getSubject();
                 String issuer = claims.getIssuer();
                 Date expiration = claims.getExpiration();
+                String role = claims.get("ROLE").toString();
 
                 if ((issuer != null && issuer.equals(EMITER))
                         && (subject != null && !subject.isEmpty())
                         && (expiration != null && expiration.after(new Date()))
                    )
                 {
-                    return new UsernamePasswordAuthenticationToken("user", null, Collections.emptyList());
+                    return new UsernamePasswordAuthenticationToken(subject, null, Collections.singletonList(new SimpleGrantedAuthority(role)));
                 }
             }
         }

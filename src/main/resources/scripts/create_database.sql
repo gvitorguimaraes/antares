@@ -7,7 +7,8 @@ create table if not exists app_user
     email                       varchar(200)    not null unique,
     password                    varchar(100)    not null,
     active                      boolean         default true,
-    last_edit_data              timestamp
+    last_edit_data              timestamp,
+    role                        int             not null
 );
 
 create table if not exists universe

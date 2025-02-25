@@ -2,7 +2,9 @@ package br.com.atlantz.antares.model;
 
 import br.com.atlantz.antares.model.dto.RegisterDTO;
 import br.com.atlantz.antares.model.enums.UserRoleEnum;
+import br.com.atlantz.antares.model.enums.UserRoleEnumConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -27,6 +29,7 @@ public class User extends BaseEntity
     @Column(name = "last_edit_data")
     private LocalDateTime lastEditData;
 
+    @Convert(converter = UserRoleEnumConverter.class)
     @Column(nullable = false)
     private UserRoleEnum role;
 
@@ -37,6 +40,8 @@ public class User extends BaseEntity
 
     public User(RegisterDTO registerDTO)
     {
+        super();
+
         this.setName(registerDTO.name());
         this.setEmail(registerDTO.email());
         this.setPassword(registerDTO.password());

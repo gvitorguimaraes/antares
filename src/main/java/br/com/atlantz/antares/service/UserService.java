@@ -2,6 +2,7 @@ package br.com.atlantz.antares.service;
 
 import br.com.atlantz.antares.model.User;
 import br.com.atlantz.antares.model.dto.LoginDTO;
+import br.com.atlantz.antares.model.enums.UserRoleEnum;
 import br.com.atlantz.antares.repo.UserRepo;
 import br.com.atlantz.antares.security.AuthToken;
 import br.com.atlantz.antares.security.TokenUtil;
@@ -18,8 +19,9 @@ public class UserService implements IUserService
     @Override
     public User createNew(User user)
     {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setRole(UserRoleEnum.USER);
+
         return repo.save(user);
     }
 
@@ -30,10 +32,9 @@ public class UserService implements IUserService
 
         if (user != null )
         {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            if(encoder.matches(login.password(), user.getPassword()))
+            if(new BCryptPasswordEncoder().matches(login.password(), user.getPassword()))
             {
-                return TokenUtil.encode(new LoginDTO(login.username(), login.password(), user.getRole().name()));
+                return TokenUtil.encode(new LoginDTO(login.username(), login.password(), user.getRole().getCode()));
             }
         }
 

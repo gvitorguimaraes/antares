@@ -24,7 +24,7 @@ public class WebSecurityConfig
         {
             auth.requestMatchers(new AntPathRequestMatcher("/register", "POST")).permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/auth", "POST")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/master", "GET")).hasRole(UserRoleEnum.MASTER.name())
+                    .requestMatchers(new AntPathRequestMatcher("/master", "GET")).hasRole(UserRoleEnum.MASTER.getCode())
                     .anyRequest().authenticated();
         })
         .addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class);

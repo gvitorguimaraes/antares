@@ -10,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserService implements IUserService
 {
     @Autowired
     private UserRepo repo;
+
+    @Autowired
+    private IUniverseService universeService;
 
     @Override
     public User createNew(User user)
@@ -34,10 +39,25 @@ public class UserService implements IUserService
         {
             if(new BCryptPasswordEncoder().matches(login.password(), user.getPassword()))
             {
+                actionsBeforeLogin(user);
                 return TokenUtil.encode(new LoginDTO(login.username(), login.password(), user.getRole().getCode()));
             }
         }
 
         return null;
+    }
+
+    private void actionsBeforeLogin(User user)
+    {
+        //
+        // create a Universe in the first login
+        if (user.getLastLoginData() == null)
+        {
+            universeService.createNewUniverse(user);
+        }
+
+
+        user.setLastLoginData(LocalDateTime.now());
+        repo.save(user);
     }
 }

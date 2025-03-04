@@ -12,33 +12,22 @@ import java.util.List;
 @Table
 public class Universe extends BaseEntity
 {
-    @Column(length = 100, nullable = false)
-    private String name;
-
-    @Column(length = 500)
-    private String description;
+    @OneToOne
+    @JoinColumn(name="id_user", referencedColumnName = "id")
+    private User user;
 
     @OneToMany(mappedBy = "universe", fetch = FetchType.LAZY)
     private List<Galaxy> galaxies;
 
-    public String getName()
+
+    public User getUser()
     {
-        return name;
+        return user;
     }
 
-    public void setName(String name)
+    public void setUser(User user)
     {
-        this.name = name;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
+        this.user = user;
     }
 
     public List<Galaxy> getGalaxies()

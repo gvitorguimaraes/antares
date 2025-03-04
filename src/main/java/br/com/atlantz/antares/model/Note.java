@@ -1,5 +1,10 @@
 package br.com.atlantz.antares.model;
 
-public class Note
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table
+public class Note extends BaseEntity
 {
 }

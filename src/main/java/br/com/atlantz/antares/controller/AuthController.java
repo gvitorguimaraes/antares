@@ -27,13 +27,29 @@ public class AuthController
         {
             return ResponseEntity.ok(token);
         }
+
+        //
+        // TODO - tratar erro caso não encontre o usuario
+
         return ResponseEntity.status(403).build();
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createNewUser(@RequestBody RegisterDTO registerDTO)
+    public ResponseEntity createNewUser(@RequestBody RegisterDTO registerDTO)
     {
-        return ResponseEntity.status(201).body(service.createNew(new User(registerDTO)));
+        try
+        {
+            service.createNew(new User(registerDTO));
+            return ResponseEntity.status(201).build();
+        }
+        catch (Exception e)
+        {
+            //
+            // TODO - tratar erro caso já exista usuário com email informado, ou caso a senha esteja errada
+
+            return ResponseEntity.status(404).build();
+        }
+
     }
 
     //

@@ -55,4 +55,10 @@ public abstract class BaseEntity
     {
         return exclusion != null;
     }
+
+    public String getDateFormated(LocalDateTime date)
+    {
+        // TODO - implement format
+        return null;
+    }
 }

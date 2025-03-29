@@ -8,4 +8,5 @@ public interface IUserService
 {
     public User createNew(User user);
     public AuthToken login(LoginDTO login);
+    public User recoveryUserFromTokenAuth();
 }

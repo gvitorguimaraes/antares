@@ -16,13 +16,18 @@ public class UniverseService implements IUniverseService
     private IUserActivityLogService userActivityLog;
 
     @Override
-    public Universe createNewUniverse(User user)
+    public Universe createNewUniverse(User user) throws Exception
     {
         Universe universe = new Universe();
         universe.setUser(user);
-
-        userActivityLog.createNewActivityLog(user, universe);
+        user.setUniverse(universe);
 
         return repo.save(universe);
+    }
+
+    @Override
+    public Universe findUniverseByUser(User user) throws Exception
+    {
+        return repo.findByUser(user);
     }
 }

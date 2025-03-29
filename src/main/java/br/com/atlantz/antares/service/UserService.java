@@ -9,8 +9,11 @@ import br.com.atlantz.antares.security.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserService implements IUserService
@@ -33,21 +36,28 @@ public class UserService implements IUserService
     @Override
     public AuthToken login(LoginDTO login)
     {
-        User user = repo.findByEmail(login.username());
-
-        if (user != null )
+        try
         {
-            if(new BCryptPasswordEncoder().matches(login.password(), user.getPassword()))
-            {
-                actionsBeforeLogin(user);
-                return TokenUtil.encode(new LoginDTO(login.username(), login.password(), user.getRole().getCode()));
-            }
-        }
+            User user = repo.findByEmail(login.username());
 
-        return null;
+            if (user != null )
+            {
+                if(new BCryptPasswordEncoder().matches(login.password(), user.getPassword()))
+                {
+                    actionsBeforeLogin(user);
+                    return TokenUtil.encode(user.getId(), user.getRole().getCode());
+                }
+            }
+            return null;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    private void actionsBeforeLogin(User user)
+    private void actionsBeforeLogin(User user) throws Exception
     {
         //
         // create a Universe in the first login
@@ -59,5 +69,17 @@ public class UserService implements IUserService
 
         user.setLastLoginData(LocalDateTime.now());
         repo.save(user);
+    }
+
+    @Override
+    public User recoveryUserFromTokenAuth()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() != null)
+        {
+            return repo.findById(UUID.fromString(authentication.getPrincipal().toString())).orElse(null);
+        }
+        return null;
     }
 }

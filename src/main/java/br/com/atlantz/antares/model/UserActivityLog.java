@@ -15,23 +15,14 @@ public class UserActivityLog extends BaseEntity
     @Column
     private Boolean showInTimeline;
 
-    @Column
+    @Column(name="date_activity")
     private LocalDateTime date;
 
     @Column(length = 2000)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "id_galaxy")
-    private Galaxy galaxy;
-
-    @ManyToOne
-    @JoinColumn(name = "id_starCluster")
-    private StarCluster starCluster;
-
-    @ManyToOne
-    @JoinColumn(name = "id_star")
-    private Star star;
+    @Column(name="time_reg")
+    private Double time;
 
     @ManyToOne
     @JoinColumn(name = "id_task")
@@ -48,19 +39,23 @@ public class UserActivityLog extends BaseEntity
         this.user = user;
         this.date = LocalDateTime.now();
 
-        if (obj instanceof Galaxy)
+        if (obj instanceof Task)
         {
-            this.galaxy = (Galaxy) obj;
+            this.task = (Task) obj;
         }
-        else if (obj instanceof StarCluster)
+        else if (obj instanceof Note)
         {
-            this.starCluster = (StarCluster) obj;
+            this.note = (Note) obj;
         }
-        else if (obj instanceof Star)
-        {
-            this.star = (Star) obj;
-        }
-        else if (obj instanceof Task)
+    }
+
+    public UserActivityLog(User user, BaseEntity obj, Double time)
+    {
+        this.user = user;
+        this.date = LocalDateTime.now();
+        this.time = time;
+
+        if (obj instanceof Task)
         {
             this.task = (Task) obj;
         }
@@ -111,34 +106,14 @@ public class UserActivityLog extends BaseEntity
         this.description = description;
     }
 
-    public Galaxy getGalaxy()
+    public Double getTime()
     {
-        return galaxy;
+        return time;
     }
 
-    public void setGalaxy(Galaxy galaxy)
+    public void setTime(Double time)
     {
-        this.galaxy = galaxy;
-    }
-
-    public StarCluster getStarCluster()
-    {
-        return starCluster;
-    }
-
-    public void setStarCluster(StarCluster starCluster)
-    {
-        this.starCluster = starCluster;
-    }
-
-    public Star getStar()
-    {
-        return star;
-    }
-
-    public void setStar(Star star)
-    {
-        this.star = star;
+        this.time = time;
     }
 
     public Task getTask()

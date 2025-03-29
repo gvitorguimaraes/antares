@@ -5,5 +5,6 @@ import br.com.atlantz.antares.model.User;
 
 public interface IUserActivityLogService
 {
-    public void createNewActivityLog(User user, BaseEntity entity);
+    public void createNewActivityLog(User user, BaseEntity entity) throws Exception;
+    public void createNewActivityLog(User user, BaseEntity entity, Double time) throws Exception;
 }

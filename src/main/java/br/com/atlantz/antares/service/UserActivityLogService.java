@@ -18,4 +18,10 @@ public class UserActivityLogService implements IUserActivityLogService
     {
         repo.save(new UserActivityLog(user, entity).setShowInTimeline(false));
     }
+
+    @Override
+    public void createNewActivityLog(User user, BaseEntity entity, Double time)
+    {
+        repo.save(new UserActivityLog(user, entity).setShowInTimeline(false));
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.atlantz.antares.model;
 
+import br.com.atlantz.antares.model.dto.GalaxyDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +16,14 @@ public class Galaxy extends BaseEntity
     @ManyToOne
     @JoinColumn(name = "id_universe")
     private Universe universe;
+
+    public Galaxy(){};
+
+    public Galaxy (GalaxyDTO galaxyDTO)
+    {
+        this.name = galaxyDTO.name();
+        this.description = galaxyDTO.description();
+    }
 
     public String getName()
     {
@@ -45,4 +54,5 @@ public class Galaxy extends BaseEntity
     {
         this.universe = universe;
     }
+
 }

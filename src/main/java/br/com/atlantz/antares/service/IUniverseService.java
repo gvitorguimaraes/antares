@@ -5,5 +5,6 @@ import br.com.atlantz.antares.model.User;
 
 public interface IUniverseService
 {
-    public Universe createNewUniverse(User user);
+    public Universe createNewUniverse(User user) throws Exception;
+    public Universe findUniverseByUser(User user) throws Exception;
 }

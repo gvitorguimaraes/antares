@@ -19,7 +19,6 @@ public class Universe extends BaseEntity
     @OneToMany(mappedBy = "universe", fetch = FetchType.LAZY)
     private List<Galaxy> galaxies;
 
-
     public User getUser()
     {
         return user;

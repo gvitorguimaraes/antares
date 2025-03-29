@@ -35,7 +35,7 @@ public class AuthController
     }
 
     @PostMapping("/register")
-    public ResponseEntity createNewUser(@RequestBody RegisterDTO registerDTO)
+    public ResponseEntity<Void> createNewUser(@RequestBody RegisterDTO registerDTO)
     {
         try
         {
@@ -50,14 +50,6 @@ public class AuthController
             return ResponseEntity.status(404).build();
         }
 
-    }
-
-    //
-    // test
-    @GetMapping("/master")
-    public String sayHelloAdmin()
-    {
-        return "Hello MASTER";
     }
 
 }

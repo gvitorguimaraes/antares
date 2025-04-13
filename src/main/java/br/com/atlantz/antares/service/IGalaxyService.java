@@ -1,6 +1,8 @@
 package br.com.atlantz.antares.service;
 
 import br.com.atlantz.antares.model.Galaxy;
+import br.com.atlantz.antares.model.Universe;
+import br.com.atlantz.antares.model.User;
 import br.com.atlantz.antares.model.dto.GalaxyDTO;
 
 import java.util.List;
@@ -13,4 +15,5 @@ public interface IGalaxyService
     Galaxy findById(UUID id);
     void softDelete(Galaxy galaxy);
     Galaxy updateGalaxy(GalaxyDTO galaxyDTO);
+    Galaxy createNewGalaxyAntaresV1(User user);
 }

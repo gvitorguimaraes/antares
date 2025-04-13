@@ -52,4 +52,11 @@ public class AuthController
 
     }
 
+    @GetMapping("/isTokenActive")
+    public ResponseEntity<AuthToken> tokenIsActive()
+    {
+        //
+        // always return 200, because if the token is not valid the springSecurity config will block th access
+        return ResponseEntity.status(200).build();
+    }
 }

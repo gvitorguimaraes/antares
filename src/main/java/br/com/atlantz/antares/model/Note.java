@@ -1,5 +1,6 @@
 package br.com.atlantz.antares.model;
 
+import br.com.atlantz.antares.model.dto.NoteDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +16,14 @@ public class Note extends BaseEntity
     @ManyToOne
     @JoinColumn(name = "id_galaxy")
     private Galaxy galaxy;
+
+    public Note() {}
+
+    public Note(NoteDTO dto)
+    {
+        this.title = dto.title();
+        this.description = dto.description();
+    }
 
     public String getTitle()
     {

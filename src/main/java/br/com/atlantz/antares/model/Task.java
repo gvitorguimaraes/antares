@@ -1,5 +1,6 @@
 package br.com.atlantz.antares.model;
 
+import br.com.atlantz.antares.model.dto.TaskDTO;
 import br.com.atlantz.antares.model.enums.TaskStatusEnum;
 import br.com.atlantz.antares.model.enums.TaskStatusEnumConverter;
 import jakarta.persistence.*;
@@ -26,6 +27,16 @@ public class Task extends BaseEntity
     @ManyToOne
     @JoinColumn(name = "id_galaxy")
     private Galaxy galaxy;
+
+    public Task(){}
+
+    public Task(TaskDTO dto)
+    {
+        this.setTitle(dto.title());
+        this.setDescription(dto.description());
+        this.setStatus(TaskStatusEnum.fromCode(dto.statusCode()));
+        this.setEnd_date(dto.endDate());
+    }
 
     public String getTitle()
     {

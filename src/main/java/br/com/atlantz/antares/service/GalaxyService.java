@@ -84,4 +84,14 @@ public class GalaxyService implements IGalaxyService
         }
         return null;
     }
+
+    @Override
+    public Galaxy createNewGalaxyAntaresV1(User user)
+    {
+        Galaxy galaxy = new Galaxy();
+        galaxy.setName("My first galaxy");
+        galaxy.setDescription("A galaxy auto generated for users registered in Antares version 1");
+        galaxy.setUniverse(user.getUniverse());
+        return repo.save(galaxy);
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.atlantz.antares.service;
 
+import br.com.atlantz.antares.model.Universe;
 import br.com.atlantz.antares.model.User;
 import br.com.atlantz.antares.model.dto.LoginDTO;
 import br.com.atlantz.antares.model.enums.UserRoleEnum;
@@ -7,10 +8,10 @@ import br.com.atlantz.antares.repo.UserRepo;
 import br.com.atlantz.antares.security.AuthToken;
 import br.com.atlantz.antares.security.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,6 +24,9 @@ public class UserService implements IUserService
 
     @Autowired
     private IUniverseService universeService;
+
+    @Autowired
+    private IGalaxyService galaxyService;
 
     @Override
     public User createNew(User user)
@@ -59,13 +63,16 @@ public class UserService implements IUserService
 
     private void actionsBeforeLogin(User user) throws Exception
     {
-        //
-        // create a Universe in the first login
         if (user.getLastLoginData() == null)
         {
+            //
+            // create a Universe in the first login
             universeService.createNewUniverse(user);
-        }
 
+            //
+            // create a galaxy for universe (just in V1, because the galaxy module is inactive)
+            galaxyService.createNewGalaxyAntaresV1(user);
+        }
 
         user.setLastLoginData(LocalDateTime.now());
         repo.save(user);

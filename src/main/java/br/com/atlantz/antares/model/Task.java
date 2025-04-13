@@ -1,6 +1,5 @@
 package br.com.atlantz.antares.model;
 
-import br.com.atlantz.antares.model.dto.TaskDTO;
 import br.com.atlantz.antares.model.enums.TaskStatusEnum;
 import br.com.atlantz.antares.model.enums.TaskStatusEnumConverter;
 import jakarta.persistence.*;
@@ -9,8 +8,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table
-public class Task extends BaseEntity
-{
+public class Task extends BaseEntity {
+
+    @ManyToOne
+    @JoinColumn(name="id_user", referencedColumnName = "id")
+    private User user;
+
     @Column(length = 500)
     private String title;
 
@@ -22,20 +25,16 @@ public class Task extends BaseEntity
     private TaskStatusEnum status;
 
     @Column
-    private LocalDateTime end_date;
+    private LocalDateTime endDate;
 
-    @ManyToOne
-    @JoinColumn(name = "id_galaxy")
-    private Galaxy galaxy;
-
-    public Task(){}
-
-    public Task(TaskDTO dto)
+    public User getUser()
     {
-        this.setTitle(dto.title());
-        this.setDescription(dto.description());
-        this.setStatus(TaskStatusEnum.fromCode(dto.statusCode()));
-        this.setEnd_date(dto.endDate());
+        return user;
+    }
+
+    public void setUser(User user)
+    {
+        this.user = user;
     }
 
     public String getTitle()
@@ -68,23 +67,13 @@ public class Task extends BaseEntity
         this.status = status;
     }
 
-    public LocalDateTime getEnd_date()
+    public LocalDateTime getEndDate()
     {
-        return end_date;
+        return endDate;
     }
 
-    public void setEnd_date(LocalDateTime end_date)
+    public void setEndDate(LocalDateTime endDate)
     {
-        this.end_date = end_date;
-    }
-
-    public Galaxy getGalaxy()
-    {
-        return galaxy;
-    }
-
-    public void setGalaxy(Galaxy galaxy)
-    {
-        this.galaxy = galaxy;
+        this.endDate = endDate;
     }
 }

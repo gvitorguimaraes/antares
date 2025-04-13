@@ -1,91 +1,83 @@
 package br.com.atlantz.antares.service;
 
-import br.com.atlantz.antares.model.Galaxy;
 import br.com.atlantz.antares.model.Task;
 import br.com.atlantz.antares.model.User;
-import br.com.atlantz.antares.model.dto.GalaxyDTO;
 import br.com.atlantz.antares.model.dto.TaskDTO;
 import br.com.atlantz.antares.model.enums.TaskStatusEnum;
-import br.com.atlantz.antares.repo.GalaxyRepo;
 import br.com.atlantz.antares.repo.TaskRepo;
+import br.com.atlantz.antares.util.error.ServiceInternException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class TaskService implements ITaskService
-{
-    @Autowired
-    private TaskRepo repo;
+public class TaskService implements ITaskService {
 
     @Autowired
-    private IGalaxyService galaxyService;
+    private TaskRepo repo;
 
     @Autowired
     private IUserService userService;
 
     @Override
-    public Task save(Task task)
-    {
-        // Can be removed in future versions, the correct galaxy will be provided by user
-        Galaxy galaxy = galaxyService.getActiveGalaxies().getFirst();
-        task.setGalaxy(galaxy);
-
+    public Task save(Task task) {
+        User user = userService.recoveryUserFromTokenAuth();
+        if (user == null) {
+            throw new ServiceInternException(TaskService.class, "Authorization error, user ID not valid.");
+        }
+        task.setUser(user);
+        if (task.getStatus() == null) {
+            task.setStatus(TaskStatusEnum.NEW);
+        }
         return repo.save(task);
     }
 
     @Override
-    public List<Task> getActiveTasks()
-    {
-        try
-        {
-            User user =  userService.recoveryUserFromTokenAuth();
-            if (user != null && user.getUniverse() != null) {
-                return repo.findByGalaxyAndExclusionIsNull(user.getUniverse().getGalaxies().getFirst());
+    public List<Task> getActiveTasks() {
+        try {
+            User user = userService.recoveryUserFromTokenAuth();
+            if (user == null) {
+                return Collections.emptyList();
             }
-            return null;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
+            return repo.findAllByUserAndExclusionIsNull(user);
+        } catch (Exception e) {
+            throw new ServiceInternException(TaskService.class, "Error in getActiveTasks()", e);
         }
     }
 
     @Override
-    public Task findById(UUID id)
-    {
-        return repo.findById(id).orElse(null);
+    public Optional<Task> findById(UUID id) {
+        return repo.findByIdAndExclusionIsNull(id);
     }
 
     @Override
-    public void softDelete(Task task)
-    {
-        if (task != null
-                && task.getId() != null
-                && !task.isDeleted())
-        {
+    public boolean softDelete(UUID id) {
+        Task task = findById(id).orElse(null);
+        if (task != null) {
             task.setExclusion(LocalDateTime.now());
             repo.save(task);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public Task updateTask(TaskDTO taskDTO)
-    {
-        Task task = findById(UUID.fromString(taskDTO.id()));
-
-        if (task != null)
-        {
+    public Optional<Task> updateTask(TaskDTO taskDTO) {
+        Task task = findById(UUID.fromString(taskDTO.id())).orElse(null);
+        if (task != null){
             task.setTitle(taskDTO.title());
             task.setDescription(taskDTO.description());
             task.setStatus(TaskStatusEnum.fromCode(taskDTO.statusCode()));
-            task.setEnd_date(task.getEnd_date());
-            return repo.save(task);
+            if (taskDTO.endDate() != null) {
+                task.setEndDate(taskDTO.endDate());
+            }
+            return Optional.of(repo.save(task));
         }
-        return null;
+        return Optional.empty();
     }
 }

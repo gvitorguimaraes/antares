@@ -4,13 +4,14 @@ import br.com.atlantz.antares.model.Task;
 import br.com.atlantz.antares.model.dto.TaskDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ITaskService
 {
     Task save(Task task);
     List<Task> getActiveTasks();
-    Task findById(UUID id);
-    void softDelete(Task task);
-    Task updateTask(TaskDTO taskDTO);
+    Optional<Task> findById(UUID id);
+    boolean softDelete(UUID id);
+    Optional<Task> updateTask(TaskDTO taskDTO);
 }

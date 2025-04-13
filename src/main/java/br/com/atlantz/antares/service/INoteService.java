@@ -6,13 +6,14 @@ import br.com.atlantz.antares.model.dto.NoteDTO;
 import br.com.atlantz.antares.model.dto.TaskDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface INoteService
 {
-    Note save(Note task);
+    Note save(Note note);
     List<Note> getActiveNotes();
-    Note findById(UUID id);
-    void softDelete(Note task);
-    Note updateNote(NoteDTO taskDTO);
+    Optional<Note> findById(UUID id);
+    boolean softDelete(UUID id);
+    Optional<Note> updateNote(NoteDTO noteDTO);
 }

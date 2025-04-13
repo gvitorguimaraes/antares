@@ -35,10 +35,6 @@ public class User extends BaseEntity
     @Column(nullable = false)
     private UserRoleEnum role;
 
-    @OneToOne
-    @JoinColumn(name = "id_universe")
-    private Universe universe;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserActivityLog> activityLogs;
 
@@ -126,16 +122,6 @@ public class User extends BaseEntity
     public void setRole(UserRoleEnum role)
     {
         this.role = role;
-    }
-
-    public Universe getUniverse()
-    {
-        return universe;
-    }
-
-    public void setUniverse(Universe universe)
-    {
-        this.universe = universe;
     }
 
     public List<UserActivityLog> getActivityLogs()

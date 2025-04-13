@@ -6,6 +6,8 @@ import br.com.atlantz.antares.model.enums.UserRoleEnum;
 import br.com.atlantz.antares.repo.UserRepo;
 import br.com.atlantz.antares.security.AuthToken;
 import br.com.atlantz.antares.security.TokenUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,13 +18,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class UserService implements IUserService
-{
-    @Autowired
-    private UserRepo repo;
+public class UserService implements IUserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    private IUniverseGalaxyService universeGalaxyService;
+    private UserRepo repo;
 
     @Override
     public User createNew(User user)
@@ -52,18 +52,13 @@ public class UserService implements IUserService
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }
 
     private void actionsBeforeLogin(User user) throws Exception
     {
-        if (user.getLastLoginData() == null)
-        {
-            universeGalaxyService.createDefaultEntitiesForUser(user);
-        }
-
         user.setLastLoginData(LocalDateTime.now());
         repo.save(user);
     }

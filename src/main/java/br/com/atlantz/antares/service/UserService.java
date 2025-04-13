@@ -1,6 +1,5 @@
 package br.com.atlantz.antares.service;
 
-import br.com.atlantz.antares.model.Universe;
 import br.com.atlantz.antares.model.User;
 import br.com.atlantz.antares.model.dto.LoginDTO;
 import br.com.atlantz.antares.model.enums.UserRoleEnum;
@@ -23,10 +22,7 @@ public class UserService implements IUserService
     private UserRepo repo;
 
     @Autowired
-    private IUniverseService universeService;
-
-    @Autowired
-    private IGalaxyService galaxyService;
+    private IUniverseGalaxyService universeGalaxyService;
 
     @Override
     public User createNew(User user)
@@ -65,13 +61,7 @@ public class UserService implements IUserService
     {
         if (user.getLastLoginData() == null)
         {
-            //
-            // create a Universe in the first login
-            universeService.createNewUniverse(user);
-
-            //
-            // create a galaxy for universe (just in V1, because the galaxy module is inactive)
-            galaxyService.createNewGalaxyAntaresV1(user);
+            universeGalaxyService.createDefaultEntitiesForUser(user);
         }
 
         user.setLastLoginData(LocalDateTime.now());

@@ -76,4 +76,9 @@ public class Task extends BaseEntity {
     {
         this.endDate = endDate;
     }
+
+    public boolean valuesAreValid(){
+        return !this.title.isBlank()
+                && this.status != null;
+    }
 }

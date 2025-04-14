@@ -46,4 +46,7 @@ public class Note extends BaseEntity {
         this.description = description;
     }
 
+    public boolean valuesAreValid(){
+        return !this.title.isBlank();
+    }
 }

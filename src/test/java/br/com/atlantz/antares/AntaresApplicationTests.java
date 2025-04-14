@@ -9,5 +9,4 @@ class AntaresApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

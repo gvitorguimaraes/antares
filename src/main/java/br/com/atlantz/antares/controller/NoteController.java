@@ -1,6 +1,7 @@
 package br.com.atlantz.antares.controller;
 
 import br.com.atlantz.antares.model.Note;
+import br.com.atlantz.antares.model.Task;
 import br.com.atlantz.antares.model.dto.NoteDTO;
 import br.com.atlantz.antares.model.mapper.NoteMapper;
 import br.com.atlantz.antares.service.INoteService;
@@ -24,8 +25,11 @@ public class NoteController
     @PostMapping
     public ResponseEntity<NoteDTO> createNote(@RequestBody NoteDTO noteDTO) {
         Note note = noteMapper.toEntity(noteDTO);
-        Note createdNote = noteService.save(note);
-        return ResponseEntity.status(HttpStatus.CREATED).body(noteMapper.toDto(createdNote));
+        if (note.valuesAreValid()) {
+            Note createdNote = noteService.save(note);
+            return ResponseEntity.status(HttpStatus.CREATED).body(noteMapper.toDto(createdNote));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping
